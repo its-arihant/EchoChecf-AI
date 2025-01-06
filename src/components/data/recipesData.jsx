@@ -1,58 +1,176 @@
-import Salad from "../../assets/recipes/Salad.jpg"
-import QuinoaBurritoBowls from "../../assets/recipes/QuinoaBurritoBowls.jpg"
-import Spaghetti from "../../assets/recipes/spaghetti.webp"
+import Salad from '../../assets/recipes/Salad.jpg';
+import QuinoaBurritoBowls from '../../assets/recipes/QuinoaBurritoBowls.jpg';
+import Spaghetti from '../../assets/recipes/spaghetti.webp';
+import MargheritaPizza from '../../assets/recipes/MargheritaPizza.webp';
+import AvocadoToast from '../../assets/recipes/AvocadoToast.jpg';
+import BerrySmoothie from '../../assets/recipes/BerrySmoothie.jpg';
 
 const recipesData = [
-    {
-      id: 1,
-      name: 'Grilled Vegetable Salad',
-      description:
-        'A healthy and delicious grilled vegetable salad with a tangy vinaigrette.',
-      ingredients: [
-        'Zucchini',
-        'Bell peppers',
-        'Olive oil',
-        'Lemon juice',
-        'Garlic',
-        'Parsley',
-      ],
-      instructions:
-        'Grill the vegetables and toss them with olive oil, lemon juice, garlic, and parsley.',
-      image: Salad
+  {
+    id: 1,
+    name: 'Grilled Vegetable Salad',
+    description: 'A healthy and delicious grilled vegetable salad with a tangy vinaigrette.',
+    ingredients: [
+      'Zucchini',
+      'Bell peppers',
+      'Olive oil',
+      'Lemon juice',
+      'Garlic',
+      'Parsley',
+    ],
+    instructions: 'Grill the vegetables and toss them with olive oil, lemon juice, garlic, and parsley.',
+    image: Salad,
+    category: 'Salad',
+    nutritionalContent: {
+      calories: '150 kcal',
+      protein: '3g',
+      carbs: '10g',
+      fats: '8g',
     },
-    {
-      id: 2,
-      name: 'Quinoa and Black Bean Burrito Bowl',
-      description:
-        'A flavorful and filling bowl with quinoa, black beans, and fresh veggies.',
-      ingredients: [
-        'Quinoa',
-        'Black beans',
-        'Corn',
-        'Avocado',
-        'Lime',
-        'Cilantro',
-      ],
-      instructions:
-        'Cook quinoa and beans, then assemble with corn, avocado, and lime.',
-      image: QuinoaBurritoBowls
+    dietaryTags: ['Vegan', 'Gluten-Free'],
+    prepTime: '15 minutes',
+    ecoFriendlyTips: [
+      'Use organic vegetables to reduce pesticide use.',
+      'Compost vegetable scraps to reduce food waste.',
+    ],
+    sustainabilityScore: '8/10',
+  },
+  {
+    id: 2,
+    name: 'Quinoa and Black Bean Burrito Bowl',
+    description: 'A flavorful and filling bowl with quinoa, black beans, and fresh veggies.',
+    ingredients: [
+      'Quinoa',
+      'Black beans',
+      'Corn',
+      'Avocado',
+      'Lime',
+      'Cilantro',
+    ],
+    instructions: 'Cook quinoa and beans, then assemble with corn, avocado, and lime.',
+    image: QuinoaBurritoBowls,
+    category: 'Bowl',
+    nutritionalContent: {
+      calories: '250 kcal',
+      protein: '10g',
+      carbs: '35g',
+      fats: '8g',
     },
-    {
-      id: 3,
-      name: 'Spaghetti Aglio e Olio',
-      description:
-        'A simple yet delicious pasta with garlic, olive oil, and red pepper flakes.',
-      ingredients: [
-        'Spaghetti',
-        'Garlic',
-        'Olive oil',
-        'Red pepper flakes',
-        'Parsley',
-      ],
-      instructions:
-        'Cook spaghetti and toss with garlic, olive oil, and red pepper flakes.',
-      image: Spaghetti
+    dietaryTags: ['Vegan', 'Gluten-Free'],
+    prepTime: '20 minutes',
+    ecoFriendlyTips: ['Use locally sourced beans to reduce carbon footprint.'],
+    sustainabilityScore: '9/10',
+  },
+  {
+    id: 3,
+    name: 'Spaghetti Aglio e Olio',
+    description: 'A simple yet delicious pasta with garlic, olive oil, and red pepper flakes.',
+    ingredients: [
+      'Spaghetti',
+      'Garlic',
+      'Olive oil',
+      'Red pepper flakes',
+      'Parsley',
+    ],
+    instructions: 'Cook spaghetti and toss with garlic, olive oil, and red pepper flakes.',
+    image: Spaghetti,
+    category: 'Pasta',
+    nutritionalContent: {
+      calories: '350 kcal',
+      protein: '8g',
+      carbs: '50g',
+      fats: '12g',
     },
-  ];
-  
-  export default recipesData;
+    dietaryTags: ['Vegetarian'],
+    prepTime: '25 minutes',
+    ecoFriendlyTips: ['Opt for whole wheat spaghetti to increase fiber content.'],
+    sustainabilityScore: '7/10',
+  },
+  {
+    id: 4,
+    name: 'Classic Margherita Pizza',
+    description: 'A delicious pizza topped with fresh tomatoes, mozzarella, and basil.',
+    ingredients: [
+      'Pizza dough',
+      'Tomatoes',
+      'Mozzarella cheese',
+      'Basil',
+      'Olive oil',
+    ],
+    instructions: 'Roll out the dough, add toppings, and bake until the crust is golden and cheese is melted.',
+    image: MargheritaPizza,
+    category: 'Pizza',
+    nutritionalContent: {
+      calories: '300 kcal',
+      protein: '12g',
+      carbs: '40g',
+      fats: '10g',
+    },
+    dietaryTags: ['Vegetarian'],
+    prepTime: '30 minutes',
+    ecoFriendlyTips: [
+      'Make your own dough to reduce packaging waste.',
+      'Use seasonal tomatoes for better taste and lower carbon footprint.',
+    ],
+    sustainabilityScore: '8/10',
+  },
+  {
+    id: 5,
+    name: 'Berry Smoothie',
+    description: 'A refreshing smoothie made with mixed berries and yogurt.',
+    ingredients: [
+      'Mixed berries',
+      'Yogurt',
+      'Banana',
+      'Honey',
+      'Almond milk',
+    ],
+    instructions: 'Blend all ingredients together until smooth. Serve chilled in a glass.',
+    image: BerrySmoothie,
+    category: 'Beverage',
+    nutritionalContent: {
+      calories: '200 kcal',
+      protein: '5g',
+      carbs: '25g',
+      fats: '5g',
+    },
+    dietaryTags: ['Vegan', 'Gluten-Free'],
+    prepTime: '5 minutes',
+    ecoFriendlyTips: [
+      'Use frozen berries to reduce food waste.',
+      'Opt for plant-based milk to reduce environmental impact.',
+    ],
+    sustainabilityScore: '9/10',
+  },
+  {
+    id: 6,
+    name: 'Avocado Toast',
+    description: 'A simple and healthy avocado toast topped with seasonings.',
+    ingredients: [
+      'Bread',
+      'Avocado',
+      'Lemon juice',
+      'Salt',
+      'Pepper',
+      'Red chili flakes',
+    ],
+    instructions: 'Toast the bread, spread mashed avocado on top, and sprinkle with seasonings.',
+    image: AvocadoToast,
+    category: 'Snack',
+    nutritionalContent: {
+      calories: '180 kcal',
+      protein: '4g',
+      carbs: '20g',
+      fats: '10g',
+    },
+    dietaryTags: ['Vegan'],
+    prepTime: '10 minutes',
+    ecoFriendlyTips: [
+      'Use local, organic avocados to support sustainable farming.',
+      'Choose whole grain bread for added nutrition.',
+    ],
+    sustainabilityScore: '8/10',
+  },
+];
+
+export default recipesData;

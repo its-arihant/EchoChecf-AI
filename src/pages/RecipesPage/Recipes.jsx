@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import DialogBox from '../../components/dialogBox/DialogBox';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCameraRetro, faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -8,6 +9,7 @@ const Recipes = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [filteredRecipes, setFilteredRecipes] = useState(recipes);
+  const navigate = useNavigate(); // Initialize navigate
 
   // Handle opening and closing of the dialog box
   const handleOpenDialog = () => {
@@ -26,17 +28,20 @@ const Recipes = () => {
     setFilteredRecipes(filtered);
   };
 
+  // Navigate to the detailed recipe page
+  const handleViewRecipe = (id) => {
+    navigate(`/recipes/${id}`);
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 py-16 px-4 md:px-12">
       <h1 className="text-3xl font-bold text-green-700 text-center mb-12">
         Explore Our Recipes
       </h1>
 
-      {/* Search and Upload Section in One Row */}
+      {/* Search and Upload Section */}
       <div className="flex flex-col items-center justify-center gap-6 w-full md:w-4/5 mx-auto mb-12">
-        {/* Flexbox for Search Section and Upload Button */}
         <div className="flex items-center justify-between gap-6 w-full md:w-full mx-auto">
-          {/* Upload or Take a Picture Button */}
           <button
             onClick={handleOpenDialog}
             className="flex items-center justify-center bg-yellow-300 text-green-800 rounded-lg px-8 py-4 shadow-md hover:bg-yellow-400 transition w-full sm:w-2/5"
@@ -47,7 +52,6 @@ const Recipes = () => {
 
           <div className="text-lg text-gray-600 font-semibold hidden sm:block">OR</div>
 
-          {/* Search Section */}
           <div className="flex items-center w-full sm:w-2/5 bg-white border border-green-600 rounded-lg shadow-md px-4 py-3">
             <div className="flex items-center w-full">
               <FontAwesomeIcon
@@ -59,12 +63,11 @@ const Recipes = () => {
                 placeholder="Search by Recipe Name"
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
-                className="flex-grow outline-none rounded-l-md py-1 text-gray-700" //px-1 py-1
+                className="flex-grow outline-none rounded-l-md py-1 text-gray-700"
               />
             </div>
           </div>
 
-          {/* Search Button */}
           <button
             onClick={handleSearch}
             className="bg-green-600 text-white px-8 py-4 rounded-md shadow-md hover:bg-green-700 transition w-auto sm:w-auto"
@@ -95,7 +98,10 @@ const Recipes = () => {
                 {recipe.name}
               </h2>
               <p className="text-gray-700 mb-4">{recipe.description}</p>
-              <button className=" bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition">
+              <button
+                onClick={() => handleViewRecipe(recipe.id)}
+                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
+              >
                 View Recipe
               </button>
             </div>
