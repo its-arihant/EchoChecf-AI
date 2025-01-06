@@ -8,9 +8,15 @@ const LogInSignUp = () => {
   const [action, setAction] = useState("Sign Up");
   const navigate = useNavigate(); // Hook for navigation
 
-  const handleSubmit = () => {
-    // Redirect to the user form page after submission
+  const handleSignUp = () => {
+    // Redirect to the user form page after "Next" button is clicked
     navigate("/user-form");
+  };
+
+  const handleLogin = () => {
+    // Simulate logging in
+    // Redirect to home page after login
+    navigate("/");
   };
 
   return (
@@ -27,8 +33,28 @@ const LogInSignUp = () => {
           <div className="w-16 h-1 bg-green-700 rounded-full"></div>
         </div>
 
+        {/* Tab Navigation for Sign Up / Login */}
+        <div className="flex w-full border-b border-gray-300 mt-8 mb-4">
+          <button
+            className={`w-1/2 text-center py-2 text-lg font-semibold ${
+              action === "Sign Up" ? "border-b-4 border-green-700 text-green-700" : "text-gray-600"
+            }`}
+            onClick={() => setAction("Sign Up")}
+          >
+            Sign Up
+          </button>
+          <button
+            className={`w-1/2 text-center py-2 text-lg font-semibold ${
+              action === "Log In" ? "border-b-4 border-green-700 text-green-700" : "text-gray-600"
+            }`}
+            onClick={() => setAction("Log In")}
+          >
+            Log In
+          </button>
+        </div>
+
         {/* Inputs */}
-        <div className="mt-14 flex flex-col gap-6">
+        <div className="mt-4 flex flex-col gap-6">
           {action === "Login" ? null : (
             <div className="flex items-center mx-auto w-[480px] bg-gray-200 rounded-lg px-4 py-3">
               <FontAwesomeIcon icon={faUser} className="text-gray-600 w-5 h-5 mr-4" />
@@ -64,41 +90,25 @@ const LogInSignUp = () => {
           )}
         </div>
 
-        {/* Buttons */}
-        <div className="flex gap-6 mx-auto mt-14">
-          <button
-            className={`flex items-center justify-center w-56 h-14 rounded-full font-bold text-lg italic ${
-              action === "Login"
-                ? "bg-gray-300 text-gray-600"
-                : "bg-green-700 text-white hover:bg-green-800 transition"
-            }`}
-            onClick={() => setAction("Sign Up")}
-          >
-            Sign Up
-          </button>
-          <button
-            className={`flex items-center justify-center w-56 h-14 rounded-full font-bold text-lg italic ${
-              action === "Sign Up"
-                ? "bg-gray-300 text-gray-600"
-                : "bg-green-700 text-white hover:bg-green-800 transition"
-            }`}
-            onClick={() => setAction("Login")}
-          >
-            Login
-          </button>
-        </div>
-
         {/* Submit Button */}
-        {action === "Sign Up" && (
-          <div className="mt-4 flex justify-center">
+        <div className="mt-8 flex justify-end">
+          {action === "Sign Up" && (
             <button
-              onClick={handleSubmit}
+              onClick={handleSignUp}
               className="w-56 h-14 rounded-full font-bold text-lg italic bg-blue-600 text-white hover:bg-blue-700 transition"
             >
-              Submit
+              Next
             </button>
-          </div>
-        )}
+          )}
+          {action === "Log In" && (
+            <button
+              onClick={handleLogin}
+              className="w-56 h-14 rounded-full font-bold text-lg italic bg-green-700 text-white hover:bg-green-800 transition"
+            >
+              Log In
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
