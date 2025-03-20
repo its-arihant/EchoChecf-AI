@@ -108,7 +108,7 @@ const UserForm = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div
         className="min-h-screen flex items-center justify-center bg-auto bg-center"
         style={{

@@ -4,6 +4,7 @@ import { faUser, faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import Img from "../../assets/background/loginBg.jpg";
 
+
 const LogInSignUp = () => {
   const [action, setAction] = useState("Sign Up");
   const [formData, setFormData] = useState({
@@ -50,7 +51,7 @@ const LogInSignUp = () => {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem("token", data.token);
-        navigate("/");
+        navigate("/home"); 
       } else {
         alert(data.message);
       }
@@ -61,10 +62,11 @@ const LogInSignUp = () => {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center bg-auto bg-center"
+      className="min-h-screen items-center justify-center bg-auto bg-center mt-[10px] flex"
       style={{ backgroundImage: `url(${Img})` }}
-    >
-      <div className="flex flex-col mx-auto w-[600px] bg-white p-8 rounded-lg shadow-lg backdrop-blur-md bg-opacity-90">
+    >  
+
+      <div className="flex flex-col  w-[500px] h-[500px] bg-white  p-8 rounded-lg shadow-lg backdrop-blur-md bg-opacity-90">
         <div className="flex flex-col items-center gap-2">
           <div className="text-4xl font-bold italic text-green-700">{action}</div>
           <div className="w-16 h-1 bg-green-700 rounded-full"></div>
@@ -91,7 +93,7 @@ const LogInSignUp = () => {
 
         <div className="mt-4 flex flex-col gap-6">
           {action === "Log In" ? null : (
-            <div className="flex items-center mx-auto w-[480px] bg-gray-200 rounded-lg px-4 py-3">
+            <div className="flex items-center mx-auto w-[440px] bg-gray-200 rounded-lg px-4 py-3">
               <FontAwesomeIcon icon={faUser} className="text-gray-600 w-5 h-5 mr-4" />
               <input
                 type="text"
@@ -103,7 +105,7 @@ const LogInSignUp = () => {
               />
             </div>
           )}
-          <div className="flex items-center mx-auto w-[480px] bg-gray-200 rounded-lg px-4 py-3">
+          <div className="flex items-center mx-auto w-[440px] bg-gray-200 rounded-lg px-4 py-3">
             <FontAwesomeIcon icon={faEnvelope} className="text-gray-600 w-5 h-5 mr-4" />
             <input
               type="email"
@@ -114,7 +116,7 @@ const LogInSignUp = () => {
               className="w-full bg-transparent outline-none border-none text-gray-700 placeholder-gray-500 text-sm"
             />
           </div>
-          <div className="flex items-center mx-auto w-[480px] bg-gray-200 rounded-lg px-4 py-3">
+          <div className="flex items-center mx-auto w-[440px] bg-gray-200 rounded-lg px-4 py-3">
             <FontAwesomeIcon icon={faLock} className="text-gray-600 w-5 h-5 mr-4" />
             <input
               type="password"
@@ -139,7 +141,7 @@ const LogInSignUp = () => {
           {action === "Log In" && (
             <button
               onClick={handleLogin}
-              className="w-56 h-14 rounded-full font-bold text-lg italic bg-green-700 text-white hover:bg-green-800 transition"
+              className="w-56 h-14 rounded-full font-bold text-lg italic bg-green-700 text-white hover:bg-green-800 transition mt-10"
             >
               Log In
             </button>
