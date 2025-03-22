@@ -5,10 +5,18 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const HowItWorks = () => {
+  const workingRef = useRef(null);
   const stepsRef = useRef([]);
   const mlRef = useRef(null);
 
   useEffect(() => {
+
+    gsap.fromTo(
+      workingRef.current,
+      { opacity: 0, y: 50 },
+      { opacity: 1, y: 0, duration: 1.5, ease: 'power3.out' }
+    );
+
     // Animation for steps
     stepsRef.current.forEach((el, index) => {
       gsap.fromTo(
@@ -47,9 +55,9 @@ const HowItWorks = () => {
 
   return (
     <div className='min-h-screen bg-gray-100 flex flex-col items-center py-12 px-6'>
-      <h1 className='text-4xl font-bold text-green-700 mb-8'>How It Works</h1>
-      <div className='max-w-4xl text-center text-gray-700 mb-12'>
-        <p className='text-lg'>
+      <div ref={workingRef} className='container mx-auto text-center mb-16'>
+        <h2 className='text-5xl font-bold text-green-900 mb-6'>How It Works</h2>
+        <p className='text-lg text-green-700 max-w-3xl mx-auto leading-relaxed'>
           Our platform helps you identify ingredients from images and find
           related recipes using smart filters. Just follow these simple steps!
         </p>

@@ -37,14 +37,9 @@ const ContactUs = () => {
 
   return (
     <section className='min-h-screen bg-green-50 flex flex-col items-center py-16 px-6'>
-      <h2 className='text-4xl font-bold text-green-900 mb-8'>Contact Us</h2>
-
-      {/* Contact Information */}
-      <div
-        ref={contactRef}
-        className='max-w-3xl text-center text-green-700 mb-12'
-      >
-        <p className='text-lg'>
+      <div ref={contactRef} className='container mx-auto text-center mb-16'>
+        <h2 className='text-5xl font-bold text-green-900 mb-6'>Contact Us</h2>
+        <p className='text-lg text-green-700 max-w-3xl mx-auto leading-relaxed'>
           We would love to hear from you! Reach out to us through any of the
           following methods:
         </p>
@@ -55,7 +50,11 @@ const ContactUs = () => {
         {[
           { icon: faEnvelope, title: 'Email', info: 'talk@ecochefai.com' },
           { icon: faPhone, title: 'Phone', info: '+936 643 1236' },
-          { icon: faMapMarkerAlt, title: 'Address', info: 'Bhopal, Madhya Pradesh, India' },
+          {
+            icon: faMapMarkerAlt,
+            title: 'Address',
+            info: 'Bhopal, Madhya Pradesh, India',
+          },
         ].map((item, index) => (
           <div
             key={index}

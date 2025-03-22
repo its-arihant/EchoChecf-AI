@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DialogBox from '../../components/dialogBox/DialogBox';
+import FilterDialogBox from '../../components/dialogBox/FilterDialogBox';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCameraRetro, faSearch } from '@fortawesome/free-solid-svg-icons';
-import recipes from '../../components/data/recipesData';
-import axios from 'axios';
+import { faCameraRetro, faFilter } from '@fortawesome/free-solid-svg-icons';
 
 const Recipes = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [searchText, setSearchText] = useState('');
-  const [filteredRecipes, setFilteredRecipes] = useState(recipes);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
   const [predictionData, setPredictionData] = useState(null);
+  const [uploadedImage, setUploadedImage] = useState(null);
   const navigate = useNavigate();
 
-  // Handle opening and closing of the dialog box
   const handleOpenDialog = () => {
     setIsDialogOpen(true);
   };
@@ -23,146 +20,126 @@ const Recipes = () => {
     setIsDialogOpen(false);
   };
 
-  // Handle search functionality
-  const handleSearch = () => {
-    const filtered = recipes.filter((recipe) =>
-      recipe.name.toLowerCase().includes(searchText.toLowerCase())
-    );
-    setFilteredRecipes(filtered);
+  const handleOpenFilterDialog = () => {
+    setIsFilterDialogOpen(true);
   };
 
-  // Handle file selection
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+  const handleCloseFilterDialog = () => {
+    setIsFilterDialogOpen(false);
   };
 
-  // Upload image and get prediction
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      alert("Please select an image first.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('image', selectedFile);
-
-    try {
-      const response = await axios.post('http://localhost:5000/api/predict', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-
-      setPredictionData(response.data);
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      alert('Failed to get prediction. Try again.');
-    }
-  };
-
-  // Navigate to the detailed recipe page
-  const handleViewRecipe = (id) => {
-    navigate(`/recipes/${id}`);
+  const handlePredictionResult = (data) => {
+    setPredictionData(data);
+    setUploadedImage(data.image);
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100 py-16 px-4 md:px-12">
-      <h1 className="text-3xl font-bold text-green-700 text-center mb-12">
-        Explore Our Recipes
-      </h1>
-
-      {/* Search and Upload Section */}
-      <div className="flex flex-col items-center justify-center gap-6 w-full md:w-4/5 mx-auto mb-12">
-        <div className="flex items-center justify-between gap-6 w-full md:w-full mx-auto">
-          
-          {/* Upload Image Button */}
-          <label className="flex items-center justify-center bg-yellow-300 text-green-800 rounded-lg px-8 py-4 shadow-md hover:bg-yellow-400 transition w-full sm:w-2/5 cursor-pointer">
-            <FontAwesomeIcon icon={faCameraRetro} className="w-6 h-6 mr-3" />
-            <span className="hidden sm:block">Upload/Take a Picture</span>
-            <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
-          </label>
-
-          <button onClick={handleUpload} className="bg-blue-500 text-white px-6 py-3 rounded-md shadow-md hover:bg-blue-600 transition">
-            Predict
-          </button>
-
-          <div className="text-lg text-gray-600 font-semibold hidden sm:block">OR</div>
-
-          <div className="flex items-center w-full sm:w-2/5 bg-white border border-green-600 rounded-lg shadow-md px-4 py-3">
-            <div className="flex items-center w-full">
-              <FontAwesomeIcon
-                icon={faSearch}
-                className="w-4 h-4 text-gray-400 mr-3"
-              />
-              <input
-                type="text"
-                placeholder="Search by Recipe Name"
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                className="flex-grow outline-none rounded-l-md py-1 text-gray-700"
-              />
-            </div>
-          </div>
-
-          <button
-            onClick={handleSearch}
-            className="bg-green-600 text-white px-8 py-4 rounded-md shadow-md hover:bg-green-700 transition w-auto sm:w-auto"
-          >
-            Search
-          </button>
-        </div>
+    <div className='flex flex-col min-h-screen bg-gray-100 py-16 px-4 md:px-12'>
+      <div className='container mx-auto text-center mb-16'>
+        <h2 className='text-5xl font-bold text-green-900 mb-6'>
+          Find Your Next Favorite Dish
+        </h2>
+        <p className='text-lg text-green-700 max-w-3xl mx-auto leading-relaxed'>
+          Have ingredients but don't know what to cook? Let{' '}
+          <span className='font-bold text-green-800'>EcoChefAI</span> transform
+          what you have into something delicious. Explore, cook, and enjoy!
+        </p>
       </div>
 
-      {/* Display Prediction Result */}
+      {/* Upload/Take Picture & Filter Recipes Buttons */}
+      <div className='flex flex-wrap justify-center items-center gap-4 w-full md:w-4/5 mx-auto mb-12'>
+        <button
+          onClick={handleOpenDialog}
+          className='flex items-center justify-center bg-yellow-300 text-green-800 rounded-lg px-6 py-3 shadow-md hover:bg-yellow-400 transition'
+        >
+          <FontAwesomeIcon icon={faCameraRetro} className='w-5 h-5 mr-2' />
+          Upload/Take a Picture
+        </button>
+
+        <span className='text-gray-600 font-semibold text-lg'>or</span>
+
+        <button
+          onClick={handleOpenFilterDialog}
+          className='flex items-center justify-center bg-blue-500 text-white rounded-lg px-6 py-3 shadow-md hover:bg-blue-600 transition'
+        >
+          <FontAwesomeIcon icon={faFilter} className='w-5 h-5 mr-2' />
+          Filter Recipes
+        </button>
+      </div>
+
+      {/* Prediction Results */}
       {predictionData && (
-        <div className="text-center bg-white shadow-md p-6 rounded-lg mb-6">
-          <h2 className="text-xl font-semibold text-green-700">Predicted Ingredient: {predictionData.prediction}</h2>
-          <p><strong>Scientific Name:</strong> {predictionData.scientific_name}</p>
-          <p><strong>Category:</strong> {predictionData.category}</p>
+        <div className='bg-white shadow-md p-6 rounded-lg mb-6 w-full mx-auto'>
+          <h2 className='text-2xl font-bold text-green-700 text-center mb-4'>
+            Prediction Results
+          </h2>
 
-          <h3 className="text-lg font-semibold">Nutritional Values:</h3>
-          <ul>
-            {Object.entries(predictionData.nutritional_values).map(([key, value]) => (
-              <li key={key}><strong>{key}:</strong> {value}</li>
-            ))}
-          </ul>
+          {/* Image Preview */}
+          {uploadedImage && (
+            <div className='flex justify-center mb-4'>
+              <img
+                src={uploadedImage}
+                alt='Uploaded Preview'
+                className='w-48 h-48 object-cover rounded-lg shadow-md'
+              />
+            </div>
+          )}
 
-          <p><strong>Info:</strong> {predictionData.description}</p>
+          {/* Predicted Ingredient */}
+          <div className='text-center mb-4'>
+            <h3 className='text-xl font-semibold text-gray-700'>
+              {predictionData.prediction}
+            </h3>
+            <p className='text-gray-500 italic'>
+              {predictionData.scientific_name}
+            </p>
+          </div>
+
+          {/* Category */}
+          <p className='text-lg font-semibold text-green-600 text-center mb-2'>
+            Category:{' '}
+            <span className='font-normal text-gray-700'>
+              {predictionData.category}
+            </span>
+          </p>
+
+          {/* Nutritional Values */}
+          <div className='mb-4'>
+            <h3 className='text-lg font-semibold text-green-700 mb-2'>
+              Nutritional Values:
+            </h3>
+            <ul className='grid grid-cols-2 gap-2 text-gray-600'>
+              {Object.entries(predictionData.nutritional_values).map(
+                ([key, value]) => (
+                  <li
+                    key={key}
+                    className='bg-gray-100 p-2 rounded-md shadow-sm'
+                  >
+                    <strong className='text-green-800'>{key}:</strong> {value}
+                  </li>
+                )
+              )}
+            </ul>
+          </div>
+
+          {/* Description */}
+          <p className='text-gray-700 mt-4 text-justify'>
+            <strong className='text-green-700'>Info:</strong>{' '}
+            {predictionData.description}
+          </p>
         </div>
       )}
 
-      {/* Recipes Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 flex-grow">
-        {filteredRecipes.length === 0 ? (
-          <p className="text-center text-lg text-gray-700 col-span-full">
-            No recipes found, try a different search.
-          </p>
-        ) : (
-          filteredRecipes.map((recipe) => (
-            <div
-              key={recipe.id}
-              className="bg-white rounded-lg shadow-lg p-6 cursor-pointer hover:shadow-2xl transition-transform transform hover:-translate-y-2"
-            >
-              <img
-                src={recipe.image}
-                alt={recipe.name}
-                className="w-full h-48 object-cover rounded-md mb-4"
-              />
-              <h2 className="text-xl font-semibold text-green-800 mb-2">
-                {recipe.name}
-              </h2>
-              <p className="text-gray-700 mb-4">{recipe.description}</p>
-              <button
-                onClick={() => handleViewRecipe(recipe.id)}
-                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
-              >
-                View Recipe
-              </button>
-            </div>
-          ))
-        )}
-      </div>
-
-      {/* Dialog Box */}
-      <DialogBox isOpen={isDialogOpen} onClose={handleCloseDialog} />
+      {/* Dialogs */}
+      <DialogBox
+        isOpen={isDialogOpen}
+        onClose={handleCloseDialog}
+        onPredictionResult={handlePredictionResult}
+      />
+      <FilterDialogBox
+        isOpen={isFilterDialogOpen}
+        onClose={handleCloseFilterDialog}
+      />
     </div>
   );
 };
