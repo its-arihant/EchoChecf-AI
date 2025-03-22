@@ -35,7 +35,7 @@ const Navbar = () => {
           </Link>
         </div>  */}
         <div>
-          <img src={green} alt="no image" width="40vw"/>
+          <Link to = "/profile"> <img src={green} alt="no image" width="40vw"/> </Link>
         </div>
         
 

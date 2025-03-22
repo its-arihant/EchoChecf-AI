@@ -9,6 +9,7 @@ import RecipeDetailPage from './pages/RecipesDetailPage/RecipeDetailPage';
 import HowItWorksPage from './pages/WorkingPage/HowItWorksPage';
 import AboutUsPage from './pages/AboutUsPage/AboutUsPage';
 import ContactUsPage from './pages/ContactUs/ContactUsPage';
+import ProfilePage from './pages/homePage/ProfilePage';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path='/about' element={<AboutUsPage />} />
         <Route path='/how-it-works' element={<HowItWorksPage />} />
         <Route path='/contact' element={<ContactUsPage />} />
+        <Route path='/profile' element={<ProfilePage />} />
       </Routes>
     </Router>
   );
