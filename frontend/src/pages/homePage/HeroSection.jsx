@@ -1,43 +1,30 @@
 import React, { useEffect } from 'react';
 import { gsap } from 'gsap';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import GG from '../../assets/gg.png';
 import SS from '../../assets/ss.png';
 
 const HeroSection = ({ aboutUsRef }) => {
   const handleLearnMore = () => {
-    if (aboutUsRef && aboutUsRef.current) {
+    if (aboutUsRef?.current) {
       aboutUsRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  // GSAP Animations
   useEffect(() => {
     const tl = gsap.timeline({ defaults: { duration: 1, ease: 'power3.out' } });
 
-    // Animate tagline
     tl.fromTo(
-      '.tagline',
+      '.hero-text',
       { opacity: 0, y: -50 },
       { opacity: 1, y: 0, stagger: 0.2 }
-    );
-
-    // Animate subheading
-    tl.fromTo(
-      '.subheading',
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0 },
+    ).fromTo(
+      '.hero-buttons',
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, stagger: 0.3 },
       '-=0.5'
     );
 
-    // Animate buttons
-    tl.fromTo(
-      '.hero-buttons',
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, stagger: 0.3 }
-    );
-
-    // Animate decorative vectors
     gsap.to('.floating-svg', {
       y: 10,
       repeat: -1,
@@ -49,35 +36,38 @@ const HeroSection = ({ aboutUsRef }) => {
 
   return (
     <main>
-      <section className='relative bg-gradient-to-b bg-amber-100 h-screen flex flex-col justify-center items-center text-center px-6 overflow-hidden'>
-        {/* Tagline */}
-        <h1 className='tagline text-4xl md:text-6xl font-bold text-green-700 mb-4'>
-          From Nature to Plate: <br className='hidden md:block' />
-          <span className='text-yellow-500'>
-            Forage Safely, Cook Creatively
-          </span>
-        </h1>
+      <section className='relative bg-gradient-to-b from-amber-100 to-yellow-50 h-screen flex flex-col justify-center items-center text-center px-6 overflow-hidden'>
+        {/* Text & Buttons Container */}
+        <div className='relative z-10 max-w-3xl mx-auto'>
+          {/* Tagline */}
+          <h1 className='hero-text text-4xl md:text-6xl font-bold text-green-700 mb-4 leading-tight'>
+            From Nature to Plate: <br className='hidden md:block' />
+            <span className='text-yellow-500'>
+              Forage Safely, Cook Creatively
+            </span>
+          </h1>
 
-        {/* Subheading */}
-        <p className='subheading text-lg md:text-xl text-green-800 max-w-2xl mx-auto mb-10'>
-          Identify plants, discover recipes, and make sustainable eating
-          effortless.
-        </p>
+          {/* Subheading */}
+          <p className='hero-text text-lg md:text-xl text-green-800 max-w-2xl mx-auto mb-8'>
+            Identify plants, discover recipes, and make sustainable eating
+            effortless.
+          </p>
 
-        {/* Hero Buttons */}
-        <div className='hero-buttons flex flex-col md:flex-row items-center justify-center gap-6 w-full max-w-3xl'>
-          <Link
-            to='/recipes'
-            className='bg-green-600 text-white text-lg font-semibold px-6 py-4 rounded-md shadow-md hover:bg-green-700 transition w-full md:w-auto'
-          >
-            Get Started
-          </Link>
-          <button
-            onClick={handleLearnMore}
-            className='bg-yellow-300 text-green-800 text-lg font-semibold px-6 py-4 rounded-md shadow-md hover:bg-yellow-400 transition'
-          >
-            Learn More
-          </button>
+          {/* Hero Buttons */}
+          <div className='hero-buttons flex flex-col md:flex-row items-center justify-center gap-4 w-full max-w-sm mx-auto'>
+            <Link
+              to='/recipes'
+              className='w-full md:w-auto bg-green-600 text-white text-lg font-semibold px-6 py-3 rounded-lg shadow-lg hover:bg-green-700 transition'
+            >
+              Get Started
+            </Link>
+            <button
+              onClick={handleLearnMore}
+              className='w-full md:w-auto bg-yellow-300 text-green-800 text-lg font-semibold px-6 py-3 rounded-lg shadow-lg hover:bg-yellow-400 transition'
+            >
+              Learn More
+            </button>
+          </div>
         </div>
 
         {/* Decorative Vectors */}

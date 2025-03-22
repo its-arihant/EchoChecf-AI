@@ -1,7 +1,6 @@
 import React from 'react';
 // import {Row} from 'react-bootstrap'
 import Img from "../../assets/download2.jpeg";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {

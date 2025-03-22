@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import green from '../../assets/greenuser4.png';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 const Navbar = () => {
   return (
-    <header className="bg-green-600  text-white shadow-md">
+    <header className="bg-green-600 text-white shadow-md">
       <div className="container mx-auto flex items-center justify-between px-4 py-3">
         {/* Logo */}
         <Link to="/home" className="text-2xl font-bold">
@@ -28,19 +28,13 @@ const Navbar = () => {
           </Link>
         </nav>
 
-        {/* Login/Sign Up Button
-        <div classname = "hidden md:block">
-          <Link to="/login" className="bg-yellow-300 text-green-800 px-4 py-2 rounded-md hover:bg-yellow-400 transition">
-            Login / Sign Up
-          </Link>
-        </div>  */}
+        {/* Profile Icon */}
         <div>
-          <Link to = "/profile"> <img src={green} alt="no image" width="40vw"/> </Link>
+          <Link to="/profile">
+            <FontAwesomeIcon icon={faUserCircle} className="text-white text-3xl hover:text-yellow-300 transition" />
+          </Link>
         </div>
-        
 
-
-          
         {/* Mobile Menu Icon */}
         <div className="md:hidden">
           <button className="focus:outline-none">
@@ -58,6 +52,6 @@ const Navbar = () => {
       </div>
     </header>
   );
-}
+};
 
 export default Navbar;
