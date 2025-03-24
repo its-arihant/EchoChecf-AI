@@ -195,6 +195,35 @@ app.get("/api/user-form", authenticateJWT, async (req, res) => {
 });
 
 
+// ✅ Update User Form (Protected Route)
+app.put("/api/user-form", authenticateJWT, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { name, email, contact, age, height, weight, fruits, vegetables, allergies } = req.body;
+
+        // Ensure required fields are provided
+        if (!name || !email || !contact || !age || !height || !weight) {
+            return res.status(400).json({ message: "All required fields must be filled." });
+        }
+
+        const updatedUserForm = await UserForm.findOneAndUpdate(
+            { userId },
+            { name, email, contact, age, height, weight, fruits, vegetables, allergies },
+            { new: true } // Returns updated document
+        );
+
+        if (!updatedUserForm) {
+            return res.status(404).json({ message: "User form not found" });
+        }
+
+        res.json(updatedUserForm);
+    } catch (error) {
+        console.error("Error updating user form:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+
 // ✅ Start Server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
