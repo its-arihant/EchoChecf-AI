@@ -177,6 +177,24 @@ app.post("/api/predict", upload.single("image"), async (req, res) => {
     }
 });
 
+// ✅ Get User Form Data (Protected Route)
+app.get("/api/user-form", authenticateJWT, async (req, res) => {
+    try {
+        const userId = req.user.id; // Get user ID from JWT
+        const userFormData = await UserForm.findOne({ userId });
+
+        if (!userFormData) {
+            return res.status(404).json({ message: "User form not found" });
+        }
+
+        res.json(userFormData);
+    } catch (error) {
+        console.error("Error fetching user form data:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+
 // ✅ Start Server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
