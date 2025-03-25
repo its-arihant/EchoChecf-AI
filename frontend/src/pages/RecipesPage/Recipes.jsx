@@ -10,6 +10,7 @@ const Recipes = () => {
   const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
   const [predictionData, setPredictionData] = useState(null);
   const [uploadedImage, setUploadedImage] = useState(null);
+  const [generatedRecipe, setGeneratedRecipe] = useState(null);
   const navigate = useNavigate();
 
   const handleOpenDialog = () => {
@@ -31,6 +32,10 @@ const Recipes = () => {
   const handlePredictionResult = (data) => {
     setPredictionData(data);
     setUploadedImage(data.image);
+  };
+
+  const handleRecipeGenerated = (recipe) => {
+    setGeneratedRecipe(recipe);
   };
 
   return (
@@ -130,6 +135,121 @@ const Recipes = () => {
         </div>
       )}
 
+      {/* Generated Recipe */}
+      {generatedRecipe && (
+        <div className='bg-white shadow-lg rounded-lg overflow-hidden w-full max-w-4xl mx-auto mt-6'>
+          <div className='p-6 border-b'>
+            <h1 className='text-3xl font-bold text-green-700'>{generatedRecipe.name || 'Your Custom Recipe'}</h1>
+            {generatedRecipe.description && (
+              <p className='text-gray-600 mt-2'>{generatedRecipe.description}</p>
+            )}
+            <div className='flex flex-wrap gap-2 mt-4'>
+              {generatedRecipe.cuisine && (
+                <span className='bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm'>
+                  {generatedRecipe.cuisine} Cuisine
+                </span>
+              )}
+              {generatedRecipe.mealType && (
+                <span className='bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm'>
+                  {generatedRecipe.mealType}
+                </span>
+              )}
+              {generatedRecipe.dietType && (
+                <span className='bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm'>
+                  {generatedRecipe.dietType}
+                </span>
+              )}
+              {generatedRecipe.difficulty && (
+                <span className='bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm'>
+                  {generatedRecipe.difficulty}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className='p-6'>
+            {/* Display raw content if JSON parsing failed */}
+            {generatedRecipe.rawContent ? (
+              <div className='space-y-6'>
+                <h2 className='text-2xl font-semibold text-green-600'>Generated Recipe</h2>
+                <div className='bg-gray-50 p-4 rounded whitespace-pre-wrap'>
+                  {generatedRecipe.rawContent}
+                </div>
+              </div>
+            ) : (
+              <div className='space-y-8'>
+                {/* Ingredients */}
+                <div>
+                  <h2 className='text-2xl font-semibold text-green-600 mb-4'>Ingredients</h2>
+                  <ul className='list-disc list-inside space-y-2 pl-4'>
+                    {generatedRecipe.ingredients?.map((item, index) => (
+                      <li key={index} className='text-gray-800'>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Instructions */}
+                {generatedRecipe.instructions && (
+                  <div>
+                    <h2 className='text-2xl font-semibold text-green-600 mb-4'>Instructions</h2>
+                    <div className='space-y-3'>
+                      {generatedRecipe.instructions
+                        .split(/\d+\./) // Split by number followed by dot
+                        .filter(step => step.trim()) // Remove empty steps
+                        .map((step, index) => (
+                          <div key={index} className='flex'>
+                            <span className='font-bold text-green-700 mr-2'>{index + 1}.</span>
+                            <p className='text-gray-800'>{step.trim()}</p>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Time Information */}
+                {(generatedRecipe.prepTime || generatedRecipe.cookTime || generatedRecipe.totalTime) && (
+                  <div className='grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded'>
+                    {generatedRecipe.prepTime && (
+                      <div>
+                        <h3 className='font-medium text-gray-700'>Prep Time</h3>
+                        <p>{generatedRecipe.prepTime}</p>
+                      </div>
+                    )}
+                    {generatedRecipe.cookTime && (
+                      <div>
+                        <h3 className='font-medium text-gray-700'>Cook Time</h3>
+                        <p>{generatedRecipe.cookTime}</p>
+                      </div>
+                    )}
+                    {generatedRecipe.totalTime && (
+                      <div>
+                        <h3 className='font-medium text-gray-700'>Total Time</h3>
+                        <p>{generatedRecipe.totalTime}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Nutritional Info */}
+                {generatedRecipe.nutritionalContent && (
+                  <div className='bg-green-50 p-6 rounded-lg'>
+                    <h2 className='text-2xl font-semibold text-green-600 mb-4'>Nutritional Information</h2>
+                    <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
+                      {Object.entries(generatedRecipe.nutritionalContent).map(([key, value]) => (
+                        <div key={key} className='bg-white p-3 rounded shadow-sm'>
+                          <h3 className='font-medium text-gray-700 capitalize'>{key}</h3>
+                          <p className='text-lg font-semibold text-green-700'>{value}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Dialogs */}
       <DialogBox
         isOpen={isDialogOpen}
@@ -139,6 +259,7 @@ const Recipes = () => {
       <FilterDialogBox
         isOpen={isFilterDialogOpen}
         onClose={handleCloseFilterDialog}
+        onRecipeGenerated={handleRecipeGenerated}
       />
     </div>
   );

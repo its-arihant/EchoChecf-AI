@@ -223,6 +223,115 @@ app.put("/api/user-form", authenticateJWT, async (req, res) => {
     }
 });
 
+// ✅ Recipe Generation Route
+app.post("/api/generate-recipe", async (req, res) => {
+    console.log("Received request body:", req.body);
+
+    try {
+        const { ingredients, mealType, mealCategory, cuisine, dietType, chefMode } = req.body;
+
+        if (!ingredients || !Array.isArray(ingredients)) {
+            return res.status(400).json({ error: "Ingredients must be an array" });
+        }
+
+        const prompt = `Generate a detailed recipe with these specifications in perfect JSON format only:
+{
+  "name": "Recipe Name",
+  "description": "Brief description",
+  "ingredients": ["item1", "item2"],
+  "instructions": "Step-by-step instructions",
+  "prepTime": "X minutes",
+  "cookTime": "X minutes",
+  "totalTime": "X minutes",
+  "servings": X,
+  "nutritionalContent": {
+    "calories": "X kcal",
+    "protein": "Xg",
+    "carbs": "Xg",
+    "fats": "Xg"
+  },
+  "dietaryTags": ["tag1", "tag2"],
+  "cuisine": "${cuisine}",
+  "mealType": "${mealType}",
+  "difficulty": "${chefMode}"
+}
+
+Actual Specifications:
+Ingredients: ${ingredients.join(", ")}
+Meal Type: ${mealType}
+Meal Category: ${mealCategory}
+Cuisine: ${cuisine}
+Diet Type: ${dietType}
+Chef Mode: ${chefMode}
+
+IMPORTANT: Return ONLY the JSON object, without any additional text or explanations.`;
+
+        const cohereResponse = await fetch("https://api.cohere.ai/v1/generate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + process.env.COHERE_API_KEY,
+            },
+            body: JSON.stringify({
+                model: "command",
+                prompt: prompt,
+                max_tokens: 1024,
+                temperature: 0.7,
+                return_likelihoods: "NONE",
+            }),
+        });
+
+        if (!cohereResponse.ok) {
+            const errorText = await cohereResponse.text();
+            console.error("Cohere API Error Response:", errorText);
+            throw new Error(`Cohere API Error: ${errorText}`);
+        }
+
+        const cohereData = await cohereResponse.json();
+        let generatedText = cohereData?.generations?.[0]?.text || "{}";
+        
+        // Enhanced JSON cleaning
+        generatedText = generatedText
+            .replace(/^[^{]*/, '')  // Remove everything before first {
+            .replace(/[^}]*$/, '')  // Remove everything after last }
+            .trim();
+
+        let recipe;
+        try {
+            recipe = JSON.parse(generatedText);
+        } catch (parseError) {
+            console.error("JSON Parsing Error:", parseError);
+            // If parsing fails, create a basic recipe object with the raw text
+            recipe = {
+                name: "Custom Recipe",
+                description: "Here's your personalized recipe",
+                rawContent: generatedText,
+                ingredients: ingredients,
+                mealType: mealType,
+                cuisine: cuisine,
+                dietType: dietType,
+                difficulty: chefMode
+            };
+        }
+
+        // Ensure we always have a valid recipe object
+        if (!recipe.name) recipe.name = "Custom Recipe";
+        if (!recipe.ingredients) recipe.ingredients = ingredients;
+        
+        res.json({ recipe });
+    } catch (error) {
+        console.error("Error generating recipe:", error);
+        res.status(500).json({ 
+            error: "Internal Server Error",
+            recipe: {
+                name: "Recipe Generation Error",
+                description: "We couldn't generate your recipe properly",
+                errorMessage: error.message,
+                rawContent: "Please try again with different parameters."
+            }
+        });
+    }
+});
 
 // ✅ Start Server
 const PORT = process.env.PORT || 5001;
