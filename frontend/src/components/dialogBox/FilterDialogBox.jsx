@@ -163,7 +163,7 @@ const FilterDialogBox = ({ isOpen, onClose, onRecipeGenerated }) => {
             </select>
           </div>
 
-          <div>
+          {/* <div>
             <label className='block text-gray-700 font-medium'>Select Your Diet Type:</label>
             <select
               name='chefMode'
@@ -177,7 +177,7 @@ const FilterDialogBox = ({ isOpen, onClose, onRecipeGenerated }) => {
               <option value='highcal'>High Calorie</option>
               <option value='highprotein'>High Protein</option>
             </select>
-          </div>
+          </div> */}
 
           {/* Submit Button */}
           <button
