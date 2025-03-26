@@ -5,7 +5,6 @@ import RecipesPage from './pages/RecipesPage/RecipesPage';
 import LoginSignupPage from './pages/signupPage/LoginSignupPage';
 import LogInSignUp from './pages/signupPage/LogInSignUp';
 import UserForm from './pages/signupPage/userform';
-import RecipeDetailPage from './pages/RecipesDetailPage/RecipeDetailPage';
 import HowItWorksPage from './pages/WorkingPage/HowItWorksPage';
 import AboutUsPage from './pages/AboutUsPage/AboutUsPage';
 import ContactUsPage from './pages/ContactUs/ContactUsPage';
@@ -18,7 +17,6 @@ function App() {
         <Route path='/' element={<LoginSignupPage />} />
         <Route path='/home' element={<HomePage />} />
         <Route path='/recipes' element={<RecipesPage />} />
-        <Route path='/recipes/:id' element={<RecipeDetailPage />} />
         <Route path='/login' element={<LogInSignUp />} />
         <Route path='/user-form' element={<UserForm />} />
         <Route path='/about' element={<AboutUsPage />} />

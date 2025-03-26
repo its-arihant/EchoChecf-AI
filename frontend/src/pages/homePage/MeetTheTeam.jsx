@@ -72,11 +72,8 @@ const MeetTheTeam = () => {
               <h3 className="text-2xl font-semibold text-green-900 mb-2">
                 {member.name}
               </h3>
-              <p className="text-md text-green-700 font-medium mb-4">
+              <p className="text-lg text-green-700 font-medium mb-4">
                 {member.role}
-              </p>
-              <p className="text-green-600 text-sm leading-relaxed">
-                {member.bio}
               </p>
             </div>
           </div>

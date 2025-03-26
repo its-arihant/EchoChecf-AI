@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCamera, faSearch, faUpload } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faUpload } from '@fortawesome/free-solid-svg-icons';
 
 const AboutWebsite = () => {
   const aboutRef = useRef(null);
@@ -63,9 +63,9 @@ const AboutWebsite = () => {
       {/* Search Options Section */}
       <div ref={searchRef} className="container mx-auto px-6 text-center">
         <p className="text-xl md:text-xl font-bold text-green-900 mb-12">
-          Search for Plants in Three Ways
+          Search for Plants in Two Ways
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Card 1 */}
           <div className="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition search-card">
             <FontAwesomeIcon icon={faUpload} className="w-12 h-12 mx-auto mb-4 text-green-700" />
@@ -75,16 +75,9 @@ const AboutWebsite = () => {
 
           {/* Card 2 */}
           <div className="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition search-card">
-            <FontAwesomeIcon icon={faCamera} className="w-12 h-12 mx-auto mb-4 text-green-700" />
-            <h3 className="text-xl font-semibold text-green-900 mb-2">Click an Image</h3>
-            <p className="text-green-700">Snap a photo to start foraging.</p>
-          </div>
-
-          {/* Card 3 */}
-          <div className="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition search-card">
             <FontAwesomeIcon icon={faSearch} className="w-12 h-12 mx-auto mb-4 text-green-700" />
             <h3 className="text-xl font-semibold text-green-900 mb-2">Search by Name</h3>
-            <p className="text-green-700">Enter the name of a plant to learn more.</p>
+            <p className="text-green-700">Enter the name of a plant to learn recipe.</p>
           </div>
         </div>
       </div>

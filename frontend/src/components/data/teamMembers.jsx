@@ -7,33 +7,28 @@ import Team5 from "../../assets/team/team5.jpeg";
 const teamMembers = [
     {
       name: "Mehak Agrawal",
-      role: "Founder & CEO",
+      role: "21BCE10312",
       image: Team1,
-      bio: "Passionate about sustainability and making plant knowledge accessible to everyone.",
     },
     {
       name: "Sayor Debbarma",
-      role: "Web Developer & UI/UX",
+      role: "21BCE10488",
       image: Team2,
-      bio: "Loves building innovative tools for a greener future.",
     },
     {
       name: "Nilay Ashtekar",
-      role: "Lead Botanist",
+      role: "21BCE10335",
       image: Team3,
-      bio: "Expert in plant identification and sustainable farming.",
     },
     {
       name: "Arihant Aggarwal",
-      role: "ML Specialist",
+      role: "21BCE10374",
       image: Team4,
-      bio: "Diverse knowlenge in Machine Learning integration.",
     },
     {
       name: "Ronit Bhavsar",
-      role: "UX/UI Designer",
+      role: "21BCE11623",
       image: Team5,
-      bio: "Designs user-friendly experiences to make the platform intuitive.",
     },
   ];
   

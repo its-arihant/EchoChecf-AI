@@ -58,7 +58,7 @@ const Recipes = () => {
           className='flex items-center justify-center bg-yellow-300 text-green-800 rounded-lg px-6 py-3 shadow-md hover:bg-yellow-400 transition'
         >
           <FontAwesomeIcon icon={faCameraRetro} className='w-5 h-5 mr-2' />
-          Upload/Take a Picture
+          Upload a Picture
         </button>
 
         <span className='text-gray-600 font-semibold text-lg'>or</span>

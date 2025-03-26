@@ -71,24 +71,15 @@ const HowItWorks = () => {
         <h2 className='text-3xl font-bold text-white'>
           AI-Powered Ingredient Detection
         </h2>
-        <p className='text-white/50 mt-4'>
+        <p className='text-white/70 mt-4'>
           Our machine learning model can identify ingredients from an image and
           suggest related recipes instantly. Choose between uploading an image
-          or using the live camera for real-time predictions.
+          or using the filter option to find your desired recipes.
         </p>
-        <div className='mt-6 flex justify-center align-middle gap-6 font-bold text-white'>
-          <div className='px-6 py-3 bg-yellow-300 text-white font-semibold rounded-lg shadow-md'>
-            Upload Image
-          </div>
-          OR
-          <div className='px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md'>
-            Use Live Camera
-          </div>
-        </div>
       </div>
 
       <div className='w-full max-w-4xl grid md:grid-cols-3 gap-8'>
-        {['Capture or Upload Image', 'Get Predictions', 'Find Recipes'].map(
+        {['Upload An Image', 'Get Predictions', 'Find Recipes'].map(
           (step, index) => (
             <div
               key={index}
@@ -100,8 +91,8 @@ const HowItWorks = () => {
               </span>
               <h2 className='text-xl font-semibold mt-4'>{step}</h2>
               <p className='text-gray-600 mt-2 text-center'>
-                {step === 'Capture or Upload Image' &&
-                  'Take a photo or upload an image of an ingredient to start the prediction process.'}
+                {step === 'Upload An Image' &&
+                  'Upload an image of an ingredient to start the prediction process.'}
                 {step === 'Get Predictions' &&
                   'Our AI model analyzes the image and identifies the ingredient or plant.'}
                 {step === 'Find Recipes' &&
