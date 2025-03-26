@@ -8,10 +8,14 @@ const multer = require("multer");
 const axios = require("axios");
 const fs = require("fs");
 const FormData = require("form-data");
+const nodemailer = require('nodemailer');
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173', // Your Vite frontend URL
+    credentials: true
+}));
 
 // ✅ Connect to MongoDB
 const connectDB = async () => {
@@ -70,8 +74,51 @@ const authenticateJWT = (req, res, next) => {
     }
 };
 
+// Email transporter configuration
+const transporter = nodemailer.createTransport({
+    service: 'gmail', // or your email service
+    auth: {
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_PASSWORD,
+    },
+});
+
+// ✅ Contact Form Submission Route
+app.post('/api/contact', async (req, res) => {
+    try {
+        const { name, email, message } = req.body;
+
+        if (!name || !email || !message) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
+
+        const mailOptions = {
+            from: process.env.EMAIL_USERNAME,
+            to: process.env.YOUR_EMAIL, // Your personal email where you want to receive messages
+            subject: `New Contact Form Submission from ${name}`,
+            text: `
+          Name: ${name}
+          Email: ${email}
+          Message: ${message}
+        `,
+            html: `
+          <h3>New Contact Form Submission</h3>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Message:</strong></p>
+          <p>${message}</p>
+        `,
+        };
+
+        await transporter.sendMail(mailOptions);
+        res.json({ message: 'Your message has been sent successfully!' });
+    } catch (error) {
+        console.error('Error sending email:', error);
+        res.status(500).json({ message: 'Failed to send message' });
+    }
+});
+
 // ✅ Signup Route
-// ✅ Signup Route (Modified to return token)
 app.post("/api/signup", async (req, res) => {
     try {
         const { name, email, password } = req.body;
@@ -97,7 +144,6 @@ app.post("/api/signup", async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 });
-
 
 // ✅ Login Route
 app.post("/api/login", async (req, res) => {
@@ -194,7 +240,6 @@ app.get("/api/user-form", authenticateJWT, async (req, res) => {
     }
 });
 
-
 // ✅ Update User Form (Protected Route)
 app.put("/api/user-form", authenticateJWT, async (req, res) => {
     try {
@@ -239,7 +284,7 @@ app.post("/api/generate-recipe", async (req, res) => {
   "name": "Recipe Name",
   "description": "Brief description",
   "ingredients": ["item1", "item2"],
-  "instructions": "Step-by-step instructions",
+  "instructions": ["Step 1", "Step 2"],
   "prepTime": "X minutes",
   "cookTime": "X minutes",
   "totalTime": "X minutes",
@@ -264,7 +309,7 @@ Cuisine: ${cuisine}
 Diet Type: ${dietType}
 Chef Mode: ${chefMode}
 
-IMPORTANT: Return ONLY the JSON object, without any additional text or explanations.`;
+IMPORTANT: Return ONLY the JSON object, without any additional text or explanations. The JSON must be properly formatted and valid.`;
 
         const cohereResponse = await fetch("https://api.cohere.ai/v1/generate", {
             method: "POST",
@@ -292,8 +337,10 @@ IMPORTANT: Return ONLY the JSON object, without any additional text or explanati
         
         // Enhanced JSON cleaning
         generatedText = generatedText
-            .replace(/^[^{]*/, '')  // Remove everything before first {
-            .replace(/[^}]*$/, '')  // Remove everything after last }
+            .replace(/```json/g, '')  // Remove JSON code block markers
+            .replace(/```/g, '')      // Remove any remaining code block markers
+            .replace(/^[^{]*/, '')    // Remove everything before first {
+            .replace(/[^}]*$/, '')    // Remove everything after last }
             .trim();
 
         let recipe;
@@ -301,40 +348,76 @@ IMPORTANT: Return ONLY the JSON object, without any additional text or explanati
             recipe = JSON.parse(generatedText);
         } catch (parseError) {
             console.error("JSON Parsing Error:", parseError);
-            // If parsing fails, create a basic recipe object with the raw text
+            console.error("Generated text that failed to parse:", generatedText);
+            
+            // Try to extract JSON from malformed response
+            const jsonMatch = generatedText.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+                try {
+                    recipe = JSON.parse(jsonMatch[0]);
+                } catch (secondParseError) {
+                    console.error("Secondary JSON Parsing Error:", secondParseError);
+                    // Fallback to creating a basic recipe object
+                    recipe = createFallbackRecipe(ingredients, mealType, cuisine, dietType, chefMode);
+                }
+            } else {
+                recipe = createFallbackRecipe(ingredients, mealType, cuisine, dietType, chefMode);
+            }
+        }
+
+        // Validate the recipe object
+        if (!recipe.name || !recipe.ingredients || !recipe.instructions) {
             recipe = {
-                name: "Custom Recipe",
-                description: "Here's your personalized recipe",
-                rawContent: generatedText,
-                ingredients: ingredients,
-                mealType: mealType,
-                cuisine: cuisine,
-                dietType: dietType,
-                difficulty: chefMode
+                ...recipe,
+                ...createFallbackRecipe(ingredients, mealType, cuisine, dietType, chefMode)
             };
         }
 
-        // Ensure we always have a valid recipe object
-        if (!recipe.name) recipe.name = "Custom Recipe";
-        if (!recipe.ingredients) recipe.ingredients = ingredients;
-        
         res.json({ recipe });
     } catch (error) {
         console.error("Error generating recipe:", error);
         res.status(500).json({ 
             error: "Internal Server Error",
-            recipe: {
-                name: "Recipe Generation Error",
-                description: "We couldn't generate your recipe properly",
-                errorMessage: error.message,
-                rawContent: "Please try again with different parameters."
-            }
+            recipe: createFallbackRecipe(
+                req.body.ingredients || [], 
+                req.body.mealType || "Dinner", 
+                req.body.cuisine || "Indian", 
+                req.body.dietType || "Vegetarian", 
+                req.body.chefMode || "Intermediate"
+            )
         });
     }
 });
 
+// Helper function to create a fallback recipe
+function createFallbackRecipe(ingredients, mealType, cuisine, dietType, chefMode) {
+    return {
+        name: "Custom Recipe",
+        description: "Here's your personalized recipe",
+        ingredients: ingredients,
+        instructions: [
+            "1. Prepare all the ingredients",
+            "2. Cook according to your preferred method",
+            "3. Season to taste",
+            "4. Serve and enjoy!"
+        ],
+        prepTime: "10 minutes",
+        cookTime: "20 minutes",
+        totalTime: "30 minutes",
+        servings: 2,
+        nutritionalContent: {
+            calories: "Approx 300-500 kcal",
+            protein: "Varies",
+            carbs: "Varies",
+            fats: "Varies"
+        },
+        dietaryTags: [dietType],
+        cuisine: cuisine,
+        mealType: mealType,
+        difficulty: chefMode
+    };
+}
+
 // ✅ Start Server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-
-

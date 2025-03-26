@@ -221,28 +221,44 @@ const Recipes = () => {
                   </ul>
                 </div>
 
-                {/* Instructions */}
-                {generatedRecipe.instructions && (
-                  <div>
-                    <h2 className='text-2xl font-semibold text-green-600 mb-4'>
-                      Instructions
-                    </h2>
-                    <div className='space-y-3'>
-                      {generatedRecipe.instructions
-                        .split(/\d+\./) // Split by number followed by dot
-                        .filter((step) => step.trim()) // Remove empty steps
-                        .map((step, index) => (
-                          <div key={index} className='flex'>
-                            <span className='font-bold text-green-700 mr-2'>
-                              {index + 1}.
-                            </span>
-                            <p className='text-gray-800'>{step.trim()}</p>
-                          </div>
-                        ))}
+                
+          {generatedRecipe.instructions && (
+          <div>
+            <h2 className='text-2xl font-semibold text-green-600 mb-4'>
+              Instructions
+            </h2>
+            <div className='space-y-3'>
+              {Array.isArray(generatedRecipe.instructions) ? (
+                generatedRecipe.instructions.map((step, index) => {
+                  // Remove any existing numbering from the step
+                  const cleanedStep = step.replace(/^\d+\.\s*/, '').trim();
+                  return (
+                    <div key={index} className='flex'>
+                      <span className='font-bold text-green-700 mr-2'>
+                        {index + 1}.
+                      </span>
+                      <p className='text-gray-800'>{cleanedStep}</p>
                     </div>
-                  </div>
-                )}
-
+                  );
+                })
+              ) : typeof generatedRecipe.instructions === 'string' ? (
+                generatedRecipe.instructions
+                  .split(/\d+\./)
+                  .filter(step => step.trim())
+                  .map((step, index) => (
+                    <div key={index} className='flex'>
+                      <span className='font-bold text-green-700 mr-2'>
+                        {index + 1}.
+                      </span>
+                      <p className='text-gray-800'>{step.trim()}</p>
+                    </div>
+                  ))
+              ) : (
+                <p className='text-gray-800'>No instructions available</p>
+              )}
+            </div>
+          </div>
+        )}
                 {/* Time Information */}
                 {(generatedRecipe.prepTime ||
                   generatedRecipe.cookTime ||
