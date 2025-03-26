@@ -163,6 +163,22 @@ const FilterDialogBox = ({ isOpen, onClose, onRecipeGenerated }) => {
             </select>
           </div>
 
+          <div>
+            <label className='block text-gray-700 font-medium'>Select Your Diet Type:</label>
+            <select
+              name='chefMode'
+              value={formData.chefMode}
+              onChange={handleChange}
+              className='w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500'
+            >
+              <option value=''>Select</option>
+              <option value='diabetic'>Diabetic Diet (Least Sugar)</option>
+              <option value='lowfat'>Low Fat</option>
+              <option value='highcal'>High Calorie</option>
+              <option value='highprotein'>High Protein</option>
+            </select>
+          </div>
+
           {/* Submit Button */}
           <button
             type='submit'

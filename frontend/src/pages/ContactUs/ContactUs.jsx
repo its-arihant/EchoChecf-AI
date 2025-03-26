@@ -48,8 +48,8 @@ const ContactUs = () => {
       {/* Cards */}
       <div className='grid grid-cols-1 md:grid-cols-3 gap-8 text-center'>
         {[
-          { icon: faEnvelope, title: 'Email', info: 'talk@ecochefai.com' },
-          { icon: faPhone, title: 'Phone', info: '+936 643 1236' },
+          { icon: faEnvelope, title: 'Email', info: 'EcoChefAI@gmail.com' },
+          { icon: faPhone, title: 'Phone', info: '+911414141414' },
           {
             icon: faMapMarkerAlt,
             title: 'Address',
