@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/homePage/HomePage';
 import RecipesPage from './pages/RecipesPage/RecipesPage';
 import LoginSignupPage from './pages/signupPage/LoginSignupPage';
-import LogInSignUp from './pages/signupPage/LogInSignUp';
 import UserForm from './pages/signupPage/userform';
 import HowItWorksPage from './pages/WorkingPage/HowItWorksPage';
 import AboutUsPage from './pages/AboutUsPage/AboutUsPage';
@@ -17,7 +16,7 @@ function App() {
         <Route path='/' element={<LoginSignupPage />} />
         <Route path='/home' element={<HomePage />} />
         <Route path='/recipes' element={<RecipesPage />} />
-        <Route path='/login' element={<LogInSignUp />} />
+        <Route path='/login' element={<LoginSignupPage />} />
         <Route path='/user-form' element={<UserForm />} />
         <Route path='/about' element={<AboutUsPage />} />
         <Route path='/how-it-works' element={<HowItWorksPage />} />
