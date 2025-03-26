@@ -51,7 +51,7 @@ const Recipes = () => {
         </p>
       </div>
 
-      {/* Upload/Take Picture & Filter Recipes Buttons */}
+      {/* Upload Picture & Filter Recipes Buttons */}
       <div className='flex flex-wrap justify-center items-center gap-4 w-full md:w-4/5 mx-auto mb-12'>
         <button
           onClick={handleOpenDialog}
@@ -139,9 +139,13 @@ const Recipes = () => {
       {generatedRecipe && (
         <div className='bg-white shadow-lg rounded-lg overflow-hidden w-full max-w-4xl mx-auto mt-6'>
           <div className='p-6 border-b'>
-            <h1 className='text-3xl font-bold text-green-700'>{generatedRecipe.name || 'Your Custom Recipe'}</h1>
+            <h1 className='text-3xl font-bold text-green-700'>
+              {generatedRecipe.name || 'Your Custom Recipe'}
+            </h1>
             {generatedRecipe.description && (
-              <p className='text-gray-600 mt-2'>{generatedRecipe.description}</p>
+              <p className='text-gray-600 mt-2'>
+                {generatedRecipe.description}
+              </p>
             )}
             <div className='flex flex-wrap gap-2 mt-4'>
               {generatedRecipe.cuisine && (
@@ -167,11 +171,36 @@ const Recipes = () => {
             </div>
           </div>
 
+          {/* Nutritional Info */}
+          {generatedRecipe.nutritionalContent && (
+            <div className='bg-green-50 p-6 rounded-lg'>
+              <h2 className='text-2xl font-semibold text-green-600 mb-4'>
+                Nutritional Information
+              </h2>
+              <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
+                {Object.entries(generatedRecipe.nutritionalContent).map(
+                  ([key, value]) => (
+                    <div key={key} className='bg-white p-3 rounded shadow-sm'>
+                      <h3 className='font-medium text-gray-700 capitalize'>
+                        {key}
+                      </h3>
+                      <p className='text-lg font-semibold text-green-700'>
+                        {value}
+                      </p>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          )}
+
           <div className='p-6'>
             {/* Display raw content if JSON parsing failed */}
             {generatedRecipe.rawContent ? (
               <div className='space-y-6'>
-                <h2 className='text-2xl font-semibold text-green-600'>Generated Recipe</h2>
+                <h2 className='text-2xl font-semibold text-green-600'>
+                  Generated Recipe
+                </h2>
                 <div className='bg-gray-50 p-4 rounded whitespace-pre-wrap'>
                   {generatedRecipe.rawContent}
                 </div>
@@ -180,10 +209,14 @@ const Recipes = () => {
               <div className='space-y-8'>
                 {/* Ingredients */}
                 <div>
-                  <h2 className='text-2xl font-semibold text-green-600 mb-4'>Ingredients</h2>
+                  <h2 className='text-2xl font-semibold text-green-600 mb-4'>
+                    Ingredients
+                  </h2>
                   <ul className='list-disc list-inside space-y-2 pl-4'>
                     {generatedRecipe.ingredients?.map((item, index) => (
-                      <li key={index} className='text-gray-800'>{item}</li>
+                      <li key={index} className='text-gray-800'>
+                        {item}
+                      </li>
                     ))}
                   </ul>
                 </div>
@@ -191,14 +224,18 @@ const Recipes = () => {
                 {/* Instructions */}
                 {generatedRecipe.instructions && (
                   <div>
-                    <h2 className='text-2xl font-semibold text-green-600 mb-4'>Instructions</h2>
+                    <h2 className='text-2xl font-semibold text-green-600 mb-4'>
+                      Instructions
+                    </h2>
                     <div className='space-y-3'>
                       {generatedRecipe.instructions
                         .split(/\d+\./) // Split by number followed by dot
-                        .filter(step => step.trim()) // Remove empty steps
+                        .filter((step) => step.trim()) // Remove empty steps
                         .map((step, index) => (
                           <div key={index} className='flex'>
-                            <span className='font-bold text-green-700 mr-2'>{index + 1}.</span>
+                            <span className='font-bold text-green-700 mr-2'>
+                              {index + 1}.
+                            </span>
                             <p className='text-gray-800'>{step.trim()}</p>
                           </div>
                         ))}
@@ -207,7 +244,9 @@ const Recipes = () => {
                 )}
 
                 {/* Time Information */}
-                {(generatedRecipe.prepTime || generatedRecipe.cookTime || generatedRecipe.totalTime) && (
+                {(generatedRecipe.prepTime ||
+                  generatedRecipe.cookTime ||
+                  generatedRecipe.totalTime) && (
                   <div className='grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded'>
                     {generatedRecipe.prepTime && (
                       <div>
@@ -223,25 +262,12 @@ const Recipes = () => {
                     )}
                     {generatedRecipe.totalTime && (
                       <div>
-                        <h3 className='font-medium text-gray-700'>Total Time</h3>
+                        <h3 className='font-medium text-gray-700'>
+                          Total Time
+                        </h3>
                         <p>{generatedRecipe.totalTime}</p>
                       </div>
                     )}
-                  </div>
-                )}
-
-                {/* Nutritional Info */}
-                {generatedRecipe.nutritionalContent && (
-                  <div className='bg-green-50 p-6 rounded-lg'>
-                    <h2 className='text-2xl font-semibold text-green-600 mb-4'>Nutritional Information</h2>
-                    <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-                      {Object.entries(generatedRecipe.nutritionalContent).map(([key, value]) => (
-                        <div key={key} className='bg-white p-3 rounded shadow-sm'>
-                          <h3 className='font-medium text-gray-700 capitalize'>{key}</h3>
-                          <p className='text-lg font-semibold text-green-700'>{value}</p>
-                        </div>
-                      ))}
-                    </div>
                   </div>
                 )}
               </div>
