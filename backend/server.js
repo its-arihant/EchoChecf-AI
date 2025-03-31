@@ -269,6 +269,127 @@ app.put("/api/user-form", authenticateJWT, async (req, res) => {
 });
 
 // ✅ Recipe Generation Route
+// app.post("/api/generate-recipe", async (req, res) => {
+//     console.log("Received request body:", req.body);
+
+//     try {
+//         const { ingredients, mealType, mealCategory, cuisine, dietType, chefMode } = req.body;
+
+//         if (!ingredients || !Array.isArray(ingredients)) {
+//             return res.status(400).json({ error: "Ingredients must be an array" });
+//         }
+
+//         const prompt = `Generate a detailed recipe with these specifications in perfect JSON format only:
+// {
+//   "name": "Recipe Name",
+//   "description": "Brief description",
+//   "ingredients": ["item1", "item2"],
+//   "instructions": ["Step 1", "Step 2"],
+//   "prepTime": "X minutes",
+//   "cookTime": "X minutes",
+//   "totalTime": "X minutes",
+//   "servings": X,
+//   "nutritionalContent": {
+//     "calories": "X kcal",
+//     "protein": "Xg",
+//     "carbs": "Xg",
+//     "fats": "Xg"
+//   },
+//   "dietaryTags": ["tag1", "tag2"],
+//   "cuisine": "${cuisine}",
+//   "mealType": "${mealType}",
+//   "difficulty": "${chefMode}"
+// }
+
+// Actual Specifications:
+// Ingredients: ${ingredients.join(", ")}
+// Meal Type: ${mealType}
+// Meal Category: ${mealCategory}
+// Cuisine: ${cuisine}
+// Diet Type: ${dietType}
+// Chef Mode: ${chefMode}
+
+// IMPORTANT: Return ONLY the JSON object, without any additional text or explanations. The JSON must be properly formatted and valid.`;
+
+//         const cohereResponse = await fetch("https://api.cohere.ai/v1/generate", {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json",
+//                 "Authorization": "Bearer " + process.env.COHERE_API_KEY,
+//             },
+//             body: JSON.stringify({
+//                 model: "command",
+//                 prompt: prompt,
+//                 max_tokens: 1024,
+//                 temperature: 0.7,
+//                 return_likelihoods: "NONE",
+//             }),
+//         });
+
+//         if (!cohereResponse.ok) {
+//             const errorText = await cohereResponse.text();
+//             console.error("Cohere API Error Response:", errorText);
+//             throw new Error(`Cohere API Error: ${errorText}`);
+//         }
+
+//         const cohereData = await cohereResponse.json();
+//         let generatedText = cohereData?.generations?.[0]?.text || "{}";
+        
+//         // Enhanced JSON cleaning
+//         generatedText = generatedText
+//             .replace(/```json/g, '')  // Remove JSON code block markers
+//             .replace(/```/g, '')      // Remove any remaining code block markers
+//             .replace(/^[^{]*/, '')    // Remove everything before first {
+//             .replace(/[^}]*$/, '')    // Remove everything after last }
+//             .trim();
+
+//         let recipe;
+//         try {
+//             recipe = JSON.parse(generatedText);
+//         } catch (parseError) {
+//             console.error("JSON Parsing Error:", parseError);
+//             console.error("Generated text that failed to parse:", generatedText);
+            
+//             // Try to extract JSON from malformed response
+//             const jsonMatch = generatedText.match(/\{[\s\S]*\}/);
+//             if (jsonMatch) {
+//                 try {
+//                     recipe = JSON.parse(jsonMatch[0]);
+//                 } catch (secondParseError) {
+//                     console.error("Secondary JSON Parsing Error:", secondParseError);
+//                     // Fallback to creating a basic recipe object
+//                     recipe = createFallbackRecipe(ingredients, mealType, cuisine, dietType, chefMode);
+//                 }
+//             } else {
+//                 recipe = createFallbackRecipe(ingredients, mealType, cuisine, dietType, chefMode);
+//             }
+//         }
+
+//         // Validate the recipe object
+//         if (!recipe.name || !recipe.ingredients || !recipe.instructions) {
+//             recipe = {
+//                 ...recipe,
+//                 ...createFallbackRecipe(ingredients, mealType, cuisine, dietType, chefMode)
+//             };
+//         }
+
+//         res.json({ recipe });
+//     } catch (error) {
+//         console.error("Error generating recipe:", error);
+//         res.status(500).json({ 
+//             error: "Internal Server Error",
+//             recipe: createFallbackRecipe(
+//                 req.body.ingredients || [], 
+//                 req.body.mealType || "Dinner", 
+//                 req.body.cuisine || "Indian", 
+//                 req.body.dietType || "Vegetarian", 
+//                 req.body.chefMode || "Intermediate"
+//             )
+//         });
+//     }
+// });
+
+// ✅ Recipe Generation Route
 app.post("/api/generate-recipe", async (req, res) => {
     console.log("Received request body:", req.body);
 
@@ -345,22 +466,25 @@ IMPORTANT: Return ONLY the JSON object, without any additional text or explanati
 
         let recipe;
         try {
+            // First try to parse directly
             recipe = JSON.parse(generatedText);
         } catch (parseError) {
-            console.error("JSON Parsing Error:", parseError);
+            console.error("First JSON Parsing Error:", parseError);
             console.error("Generated text that failed to parse:", generatedText);
             
-            // Try to extract JSON from malformed response
-            const jsonMatch = generatedText.match(/\{[\s\S]*\}/);
-            if (jsonMatch) {
-                try {
-                    recipe = JSON.parse(jsonMatch[0]);
-                } catch (secondParseError) {
-                    console.error("Secondary JSON Parsing Error:", secondParseError);
-                    // Fallback to creating a basic recipe object
-                    recipe = createFallbackRecipe(ingredients, mealType, cuisine, dietType, chefMode);
-                }
-            } else {
+            // If direct parse fails, try to fix common issues
+            try {
+                // Remove any trailing commas
+                generatedText = generatedText.replace(/,\s*([}\]])/g, '$1');
+                // Fix any single quotes to double quotes
+                generatedText = generatedText.replace(/'/g, '"');
+                // Fix any unescaped quotes in values
+                generatedText = generatedText.replace(/"([^"]*)"([^"]*)"([^"]*)"/g, '"$1\'$2\'$3"');
+                
+                recipe = JSON.parse(generatedText);
+            } catch (secondParseError) {
+                console.error("Second JSON Parsing Error:", secondParseError);
+                // If all else fails, use fallback
                 recipe = createFallbackRecipe(ingredients, mealType, cuisine, dietType, chefMode);
             }
         }
